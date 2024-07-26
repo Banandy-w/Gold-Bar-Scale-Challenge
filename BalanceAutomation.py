@@ -6,8 +6,8 @@
 
 #Task Requirements:
 #Create the test automation project using any preferred language to perform
-#a. clicks on buttons (“Weigh”, “Reset”)
-#b. Getting the measurement results (field between the 'bowls')
+#a. clicks on buttons (“Weigh”, “Reset”) DONE
+#b. Getting the measurement results (field between the 'bowls') DONE
 #c. filling out the bowls grids with bar numbers (0 to 8)
 #d. getting a list of weighing
 #e. Clicking on the gold bar number at the bottom of the website and checking for the alert message
@@ -42,6 +42,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from POM import BalancePage,Locators
 
+print("Log: Openning Page")
 driver = webdriver.Firefox()
-driver.get('http://sdetchallenge.fetch.com/')
+page = BalancePage(driver)
+page.open_page('http://sdetchallenge.fetch.com/')
+print("Log: Page Openned")
+
+
+
