@@ -50,5 +50,7 @@ page = BalancePage(driver)
 page.open_page('http://sdetchallenge.fetch.com/')
 print("Log: Page Openned")
 
+page.wait_for(Locators.ARRAY)
+print("Log: Waiting for Array to load")
 
 

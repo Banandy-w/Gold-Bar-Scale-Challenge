@@ -7,6 +7,7 @@ class Locators():
     WEIGH_BUTTON = (By.CSS_SELECTOR, "#weigh")
     RESET_BUTTON = (By.CSS_SELECTOR, "button.button:nth-child(1)")
     RESULT_INFO = (By.CSS_SELECTOR, '.result > button:nth-child(2)')
+    ARRAY = (By.CSS_SELECTOR,".coins")
 
 class BasePage():        
     def __init__(self, driver):
@@ -41,3 +42,9 @@ class BalancePage(BasePage):
     def get_result(self):
         element = self.driver.find_element(*Locators.RESULT_INFO)
         return element.text
+    
+    """Finds the length of list of gold bars incase it changes."""
+    def get_array_length(self):
+        element = self.driver.find_element(By.CSS_SELECTOR,'.coins')
+        buttons_in_div = element.find_elements(By.TAG_NAME, 'button')
+        return len(buttons_in_div)
