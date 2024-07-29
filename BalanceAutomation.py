@@ -6,9 +6,9 @@
 
 #Task Requirements:
 #Create the test automation project using any preferred language to perform
-#a. clicks on buttons (“Weigh”, “Reset”) DONE
-#b. Getting the measurement results (field between the 'bowls') DONE
-#c. filling out the bowls grids with bar numbers (0 to 8)
+#a. clicks on buttons (“Weigh”, “Reset”)                                        DONE
+#b. Getting the measurement results (field between the 'bowls')                 DONE
+#c. filling out the bowls grids with bar numbers (0 to 8)                       DONE
 #d. getting a list of weighing
 #e. Clicking on the gold bar number at the bottom of the website and checking for the alert message
 #f. Code the algorithm solution that finds the fake bar
@@ -19,6 +19,18 @@
 # Split the bars from the lighter scale between the scale
 # The lighter scale will have the fake bar. 
 # Repeat the splitting and weighting of the lighter scale until there is only 1 bar on each scale
+
+
+
+import math
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys 
+from POM import BalancePage,Locators
 
 #Pseudo Code
 #1. Open website
@@ -35,15 +47,6 @@
 #12. Get list of weightings and output.
 
 
-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from POM import BalancePage,Locators
-
 print("Log: Openning Page")
 driver = webdriver.Firefox()
 page = BalancePage(driver)
@@ -51,6 +54,19 @@ page.open_page('http://sdetchallenge.fetch.com/')
 print("Log: Page Openned")
 
 page.wait_for(Locators.ARRAY)
-print("Log: Waiting for Array to load")
+goldbars = int(page.get_array_length())
+print(goldbars)
+print("Log: Wait for page to load")
 
+page.fill_grid('right',0,math.floor(page.get_array_length()/2))
+
+#grid = driver.find_element(*Locators.RIGHT_GRID).click()
+#actions = ActionChains(driver)
+#for i in range(math.floor(goldbars/2)):
+##for i in range(0,4):
+#for i in range(math.floor(goldbars/2),goldbars-1):
+#    actions = actions.send_keys(i)
+#    actions = actions.send_keys(Keys.TAB)
+#actions.perform()
+#Make a method that grabs N from length of array then does the above navigation per grid
 
