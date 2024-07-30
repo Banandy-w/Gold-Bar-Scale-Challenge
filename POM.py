@@ -13,7 +13,7 @@ class Locators():
     ARRAY = (By.CSS_SELECTOR,".coins")
     LEFT_GRID = (By.CSS_SELECTOR,'#left_0')
     RIGHT_GRID = (By.CSS_SELECTOR,'#right_0')
-
+    WEIGHINGS_INFO = (By.CSS_SELECTOR,'.game-info > ol:nth-child(2)')
 class BasePage():        
     def __init__(self, driver):
         self.driver = driver
@@ -37,18 +37,28 @@ class BalancePage(BasePage):
         super().__init__(driver)
     
     def click_weigh_button(self):
-        element = self.driver.find_element(*Locators.WEIGH_BUTTON)
-        element.click()
+        element = self.driver.find_element(*Locators.WEIGH_BUTTON).click()
         time.sleep(4)
 
     def click_reset_button(self):
-        element = self.driver.find_element(*Locators.RESET_BUTTON)
-        element.click()
+        element = self.driver.find_element(*Locators.RESET_BUTTON).click()
         time.sleep(4)
-
+    
     def get_result(self):
         element = self.driver.find_element(*Locators.RESULT_INFO)
         return element.text
+    
+    """Returns a list of weighings currently on the page"""
+    def get_weighings(self):
+        element = self.driver.find_element(*Locators.WEIGHINGS_INFO)
+        list_weighings = element.find_elements(By.TAG_NAME, 'li')
+        
+        weighings = []
+        for weighing in list_weighings:
+            weighings.append(weighing.text)
+
+        return weighings
+        
     
     """Finds the length of list of gold bars incase it changes."""
     def get_array_length(self):
@@ -56,6 +66,7 @@ class BalancePage(BasePage):
         buttons_in_div = element.find_elements(By.TAG_NAME, 'button')
         return len(buttons_in_div)
     
+    """Fills left or right grid with a range of numbers"""
     def fill_grid(self,side,range_start=None,range_end=None):
         if side =='left':
             self.driver.find_element(*Locators.LEFT_GRID).click()
