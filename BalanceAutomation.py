@@ -9,7 +9,7 @@
 #a. clicks on buttons (“Weigh”, “Reset”)                                        DONE
 #b. Getting the measurement results (field between the 'bowls')                 DONE
 #c. filling out the bowls grids with bar numbers (0 to 8)                       DONE
-#d. getting a list of weighing
+#d. getting a list of weighing                                                  DONE
 #e. Clicking on the gold bar number at the bottom of the website and checking for the alert message
 #f. Code the algorithm solution that finds the fake bar
 
@@ -46,6 +46,34 @@ from POM import BalancePage,Locators
 #11. Expect Alert message, verify
 #12. Get list of weightings and output.
 
+def split_weigh(weighing):
+    """Takes a string similar to '[0,1,2,3] > [4,5,6,7]' This function does not check for validity at the moment. 
+    Returns a list of numbers with the lesser weight or '=' if the string is equal
+    """
+    if '>' in weighing:
+        weight1, weight2 = weighing.split('>')
+        weight2 = weight2.strip('[] ')
+        new_weigh = [x for x in weight2.split(',')]
+        print(f"Log:Fake bar is one of the following numbers: {new_weigh}")
+        return new_weigh
+    
+    elif '<' in weighing:
+        weight1, weight2 = weighing.split('<')
+        weight1 = weight1.strip('[] ')
+        new_weigh = [x for x in weight1.split(',')]
+        print(f"Log:Fake bar is one of the following numbers: {new_weigh}")
+        return new_weigh
+    
+    else:
+        print("Log: The weights are equal. Fake bar is the odd one out")
+        return '='
+
+# return = [x for x in weight2.split(',')] is the same as the following
+#        new_weigh = []
+#        for x in weight2.split(','):
+#           new_weigh.append(x)
+#         return new_weigh[]
+
 
 print("Log: Openning Page")
 driver = webdriver.Firefox()
@@ -80,5 +108,7 @@ print(weighings[0])
 #    actions = actions.send_keys(i)
 #    actions = actions.send_keys(Keys.TAB)
 #actions.perform()
-#Make a method that grabs N from length of array then does the above navigation per grid
+
+#Next steps. Make method that takes the last result from get_weighings. splits the string based on
+# > = or <. Then parses out the numbers so it can be used for filling grid or clicking result
 
