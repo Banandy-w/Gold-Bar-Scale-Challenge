@@ -36,20 +36,28 @@ class BalancePage(BasePage):
     def __init__(self,driver):
         super().__init__(driver)
     
+    #Not sure wait for presences of locators are necessary 
+    #since the app is reactjs so the elements are already loaded
     def click_weigh_button(self):
+        self.wait_for(Locators.WEIGH_BUTTON)
         element = self.driver.find_element(*Locators.WEIGH_BUTTON).click()
+        #using sleep to wait for the page to load the weigh button press as there is some delay
+        #for results to propagate
         time.sleep(4)
 
     def click_reset_button(self):
+        self.wait_for(Locators.RESET_BUTTON)
         element = self.driver.find_element(*Locators.RESET_BUTTON).click()
         time.sleep(4)
     
     def get_result(self):
+        self.wait_for(Locators.RESULT_INFO)
         element = self.driver.find_element(*Locators.RESULT_INFO)
         return element.text
     
     """Returns a list of weighings currently on the page"""
     def get_weighings(self):
+        self.wait_for(Locators.WEIGHINGS_INFO)
         element = self.driver.find_element(*Locators.WEIGHINGS_INFO)
         list_weighings = element.find_elements(By.TAG_NAME, 'li')
         
