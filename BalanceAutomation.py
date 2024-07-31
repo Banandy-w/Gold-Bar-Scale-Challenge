@@ -6,12 +6,12 @@
 
 #Task Requirements:
 #Create the test automation project using any preferred language to perform
-#a. clicks on buttons (“Weigh”, “Reset”)                                        DONE
-#b. Getting the measurement results (field between the 'bowls')                 DONE
-#c. filling out the bowls grids with bar numbers (0 to 8)                       DONE
-#d. getting a list of weighing                                                  DONE
-#e. Clicking on the gold bar number at the bottom of the website and checking for the alert message
-#f. Code the algorithm solution that finds the fake bar
+#a. clicks on buttons (“Weigh”, “Reset”)                                                            DONE
+#b. Getting the measurement results (field between the 'bowls')                                     DONE
+#c. filling out the bowls grids with bar numbers (0 to 8)                                           DONE
+#d. getting a list of weighing                                                                      DONE
+#e. Clicking on the gold bar number at the bottom of the website and checking for the alert message DONE
+#f. Code the algorithm solution that finds the fake bar                                             DONE
 
 # Solution
 # Given N bars. Put N/2 bars on each side of the scale. If the scales are balanced and N is odd, the odd bar out fake.
@@ -19,7 +19,7 @@
 # Split the bars from the lighter scale between the scale
 # The lighter scale will have the fake bar. 
 # Repeat the splitting and weighting of the lighter scale until there is only 1 bar on each scale
-
+# When there is only 1 bar on each scale left, the lighter scale from this result should be the fake
 
 
 import math, time
@@ -91,6 +91,7 @@ print("Log: Waiting for page to load")
 
 #Fill each bowl with half of the gold bars and weigh them
 #If the result is equal then the fake bar is the odd one out
+print('Log: Filling Grids')
 page.fill_grid('left',0,goldbars_mid_index)
 page.fill_grid('right',goldbars_mid_index,goldbars_len-1)
 page.click_weigh_button()
@@ -98,6 +99,8 @@ page.click_weigh_button()
 if(page.get_result() == '='):
     page.click_goldbar(goldbars_len-1)
     print(f'Log: The fake should be {goldbars_len-1}')
+    driver.quit()
+
 page.click_reset_button()
 weighings = page.get_weighings()
 
@@ -107,7 +110,7 @@ weighings = page.get_weighings()
 
 #Repeat filling the grid until weighings[last_item] returns a comparison that only has 1 goldbar a side
 #While the last item in split_weigh(weighings) is not equal to 1
-while(True):
+while True:
     #Get refreshed weighings and last weighing should contain numbers from the lighter scale
     weighings = page.get_weighings()
     #Array[-1] returns last index of Array
@@ -124,6 +127,7 @@ while(True):
     goldbars_len = len(last_weighing)
     goldbars_mid_index = math.floor(goldbars_len/2)
 
+    print('Log: Filling Grids')
     page.fill_grid('left',last_weighing[0], last_weighing[goldbars_mid_index])
     page.fill_grid('right',last_weighing[goldbars_mid_index], int(last_weighing[goldbars_len-1])+1)
     page.click_weigh_button()

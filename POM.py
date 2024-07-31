@@ -43,11 +43,13 @@ class BalancePage(BasePage):
         element = self.driver.find_element(*Locators.WEIGH_BUTTON).click()
         #using sleep to wait for the page to load the weigh button press as there is some delay
         #for results to propagate
+        print('Log: Clicked Weigh Button, Waiting 4s')
         time.sleep(4)
 
     def click_reset_button(self):
         self.wait_for(Locators.RESET_BUTTON)
         element = self.driver.find_element(*Locators.RESET_BUTTON).click()
+        print('Log: Clicked Reset Button')
         
 
     def click_goldbar(self,number):
