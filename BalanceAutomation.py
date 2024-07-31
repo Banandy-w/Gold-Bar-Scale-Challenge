@@ -86,6 +86,8 @@ goldbars = int(page.get_array_length())
 print(goldbars)
 print("Log: Wait for page to load")
 
+#page.click_goldbar('5')
+
 page.fill_grid('left',0,math.floor(goldbars/2))
 page.fill_grid('right',math.floor(goldbars/2),goldbars-1)
 page.click_weigh_button()
@@ -97,6 +99,7 @@ page.click_weigh_button()
 
 weighings = page.get_weighings()
 print(weighings[0])
+
 
 
 

@@ -37,7 +37,7 @@ class BalancePage(BasePage):
         super().__init__(driver)
     
     #Not sure wait for presences of locators are necessary 
-    #since the app is reactjs so the elements are already loaded
+    #since the app is reactjs so the elements are already loaded, but going to include them for good practice
     def click_weigh_button(self):
         self.wait_for(Locators.WEIGH_BUTTON)
         element = self.driver.find_element(*Locators.WEIGH_BUTTON).click()
@@ -49,6 +49,14 @@ class BalancePage(BasePage):
         self.wait_for(Locators.RESET_BUTTON)
         element = self.driver.find_element(*Locators.RESET_BUTTON).click()
         time.sleep(4)
+
+    def click_goldbar(self,number):
+        gold_id = 'coin_'+ number
+        element = self.driver.find_element(By.ID, gold_id).click()
+        
+        alert = self.wait.until(EC.alert_is_present())
+        print("Log: The Alert says:" + alert.text)
+        alert.accept()
     
     def get_result(self):
         self.wait_for(Locators.RESULT_INFO)
