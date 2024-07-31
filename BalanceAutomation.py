@@ -74,17 +74,17 @@ def split_weigh(weighing):
 #           new_weigh.append(x)
 #         return new_weigh[]
 
-
-print("Log: Openning Page")
+URL = 'http://sdetchallenge.fetch.com/''
+print("Log: Openning Page " + URL)
 driver = webdriver.Firefox()
 page = BalancePage(driver)
-page.open_page('http://sdetchallenge.fetch.com/')
+page.open_page(URL)
 print("Log: Page Openned")
 
-page.wait_for(Locators.ARRAY)
+page.wait_for(Locators.GOLD_BUTTON_ARRAY)
 goldbars = int(page.get_array_length())
 print(goldbars)
-print("Log: Wait for page to load")
+print("Log: Waiting for page to load")
 
 #page.click_goldbar('5')
 

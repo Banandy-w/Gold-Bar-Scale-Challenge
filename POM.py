@@ -10,7 +10,7 @@ class Locators():
     WEIGH_BUTTON = (By.CSS_SELECTOR, "#weigh")
     RESET_BUTTON = (By.CSS_SELECTOR, "button.button:nth-child(1)")
     RESULT_INFO = (By.CSS_SELECTOR, '.result > button:nth-child(2)')
-    ARRAY = (By.CSS_SELECTOR,".coins")
+    GOLD_BUTTON_ARRAY = (By.CSS_SELECTOR,".coins")
     LEFT_GRID = (By.CSS_SELECTOR,'#left_0')
     RIGHT_GRID = (By.CSS_SELECTOR,'#right_0')
     WEIGHINGS_INFO = (By.CSS_SELECTOR,'.game-info > ol:nth-child(2)')
@@ -55,7 +55,7 @@ class BalancePage(BasePage):
         element = self.driver.find_element(By.ID, gold_id).click()
         
         alert = self.wait.until(EC.alert_is_present())
-        print("Log: The Alert says:" + alert.text)
+        print("Log: The alert says: " + alert.text)
         alert.accept()
     
     def get_result(self):
@@ -78,7 +78,7 @@ class BalancePage(BasePage):
     
     """Finds the length of list of gold bars incase it changes."""
     def get_array_length(self):
-        element = self.driver.find_element(*Locators.ARRAY)
+        element = self.driver.find_element(*Locators.GOLD_BUTTON_ARRAY)
         buttons_in_div = element.find_elements(By.TAG_NAME, 'button')
         return len(buttons_in_div)
     
