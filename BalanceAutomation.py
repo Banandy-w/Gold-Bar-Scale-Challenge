@@ -22,7 +22,7 @@
 
 
 
-import math
+import math, time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -38,9 +38,9 @@ from POM import BalancePage,Locators
 #3. For N/2 times, Insert numbers 0 to N/2 into left bowl grid
 #4. For N/2 times, Insert numbers N/2 to N into right bowl grid
 #5. Press weigh button 
-#6. Get the results. Store the lighter bowl results. This is the new N
+#6. Get the results. Store the lighter bowl results. This is the last N
 #7. Press reset
-#8. Repeat from step3 with new N
+#8. Repeat from step3 with last N
 #9. Find fake bar X
 #10. Press button X
 #11. Expect Alert message, verify
@@ -53,65 +53,87 @@ def split_weigh(weighing):
     if '>' in weighing:
         weight1, weight2 = weighing.split('>')
         weight2 = weight2.strip('[] ')
-        new_weigh = [x for x in weight2.split(',')]
-        print(f"Log:Fake bar is one of the following numbers: {new_weigh}")
-        return new_weigh
+        last_weigh = [x for x in weight2.split(',')]
+        #print(f"Log:Fake bar is one of the following numbers: {last_weigh}")
+        return last_weigh
     
     elif '<' in weighing:
         weight1, weight2 = weighing.split('<')
         weight1 = weight1.strip('[] ')
-        new_weigh = [x for x in weight1.split(',')]
-        print(f"Log:Fake bar is one of the following numbers: {new_weigh}")
-        return new_weigh
+        last_weigh = [x for x in weight1.split(',')]
+        #print(f"Log:Fake bar is one of the following numbers: {last_weigh}")
+        return last_weigh
     
     else:
-        print("Log: The weights are equal. Fake bar is the odd one out")
+        #print("Log: The weights are equal. Fake bar is the odd one out")
         return '='
 
 # return = [x for x in weight2.split(',')] is the same as the following
-#        new_weigh = []
+#        last_weigh = []
 #        for x in weight2.split(','):
-#           new_weigh.append(x)
-#         return new_weigh[]
+#           last_weigh.append(x)
+#         return last_weigh[]
 
-URL = 'http://sdetchallenge.fetch.com/''
+
+#Open website
+URL = 'http://sdetchallenge.fetch.com/'
 print("Log: Openning Page " + URL)
 driver = webdriver.Firefox()
 page = BalancePage(driver)
 page.open_page(URL)
 print("Log: Page Openned")
 
+#Find the Max index of bars
 page.wait_for(Locators.GOLD_BUTTON_ARRAY)
-goldbars = int(page.get_array_length())
-print(goldbars)
+goldbars_len = int(page.get_array_length())
+goldbars_mid_index = math.floor(goldbars_len/2)
 print("Log: Waiting for page to load")
 
-#page.click_goldbar('5')
-
-page.fill_grid('left',0,math.floor(goldbars/2))
-page.fill_grid('right',math.floor(goldbars/2),goldbars-1)
+#Fill each bowl with half of the gold bars and weigh them
+#If the result is equal then the fake bar is the odd one out
+page.fill_grid('left',0,goldbars_mid_index)
+page.fill_grid('right',goldbars_mid_index,goldbars_len-1)
 page.click_weigh_button()
+
+if(page.get_result() == '='):
+    page.click_goldbar(goldbars_len-1)
+    print(f'Log: The fake should be {goldbars_len-1}')
 page.click_reset_button()
-
-page.fill_grid('left',0,math.floor(goldbars/2))
-page.fill_grid('right',math.floor(goldbars/2),goldbars-1)
-page.click_weigh_button()
-
 weighings = page.get_weighings()
-print(weighings[0])
+
+# weighings = list of weighing results
+# weighings[last_item] = latest weighing result
+# split_weighings[weighings[last_item]] = List of numbers that should have the fake bar
+
+#Repeat filling the grid until weighings[last_item] returns a comparison that only has 1 goldbar a side
+#While the last item in split_weigh(weighings) is not equal to 1
+while(True):
+    #Get refreshed weighings and last weighing should contain numbers from the lighter scale
+    weighings = page.get_weighings()
+    #Array[-1] returns last index of Array
+    last_weighing = split_weigh(weighings[-1])
+
+    #If we weighed only one result with another, then the value in the lighter scale should be the fake
+    #This works b/c split_weigh method returns the a list of numbers from the lighter scale
+    if(len(last_weighing) == 1):
+        print(f'Log: The fake should be {last_weighing[0]}')
+        page.click_goldbar(last_weighing[0])
+        break
+    
+    #last_weighing is the new reference for what numbers to fill the scales
+    goldbars_len = len(last_weighing)
+    goldbars_mid_index = math.floor(goldbars_len/2)
+
+    page.fill_grid('left',last_weighing[0], last_weighing[goldbars_mid_index])
+    page.fill_grid('right',last_weighing[goldbars_mid_index], int(last_weighing[goldbars_len-1])+1)
+    page.click_weigh_button()
+    page.click_reset_button()
+
+    
+    
+    
+    
 
 
 
-
-#grid = driver.find_element(*Locators.RIGHT_GRID).click()
-#actions = ActionChains(driver)
-#for i in range(math.floor(goldbars/2)):
-##for i in range(0,4):
-#for i in range(math.floor(goldbars/2),goldbars-1):
-#    actions = actions.send_keys(i)
-#    actions = actions.send_keys(Keys.TAB)
-#actions.perform()
-
-#Next steps. Make method that takes the last result from get_weighings. splits the string based on
-# > = or <. Then parses out the numbers so it can be used for filling grid or clicking result
 

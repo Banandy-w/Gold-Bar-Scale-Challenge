@@ -48,10 +48,10 @@ class BalancePage(BasePage):
     def click_reset_button(self):
         self.wait_for(Locators.RESET_BUTTON)
         element = self.driver.find_element(*Locators.RESET_BUTTON).click()
-        time.sleep(4)
+        
 
     def click_goldbar(self,number):
-        gold_id = 'coin_'+ number
+        gold_id = 'coin_'+ str(number)
         element = self.driver.find_element(By.ID, gold_id).click()
         
         alert = self.wait.until(EC.alert_is_present())
@@ -65,7 +65,7 @@ class BalancePage(BasePage):
     
     """Returns a list of weighings currently on the page"""
     def get_weighings(self):
-        self.wait_for(Locators.WEIGHINGS_INFO)
+        time.sleep(2)
         element = self.driver.find_element(*Locators.WEIGHINGS_INFO)
         list_weighings = element.find_elements(By.TAG_NAME, 'li')
         
@@ -84,12 +84,16 @@ class BalancePage(BasePage):
     
     """Fills left or right grid with a range of numbers"""
     def fill_grid(self,side,range_start=None,range_end=None):
+        range_start = int(range_start)
+        range_end = int(range_end)
         if side =='left':
+
             self.driver.find_element(*Locators.LEFT_GRID).click()
 
         if side =='right':
             self.driver.find_element(*Locators.RIGHT_GRID).click()
        
+        #print(f"Log: Filling {side} grid")
         actions = ActionChains(self.driver)
         for i in range(range_start,range_end):
             actions = actions.send_keys(i)
