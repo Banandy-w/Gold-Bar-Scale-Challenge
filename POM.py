@@ -95,10 +95,11 @@ class BalancePage(BasePage):
         if side =='right':
             self.driver.find_element(*Locators.RIGHT_GRID).click()
        
-        #print(f"Log: Filling {side} grid")
+        print(f"Log: Filling {side} grid with:", end=' ')
         actions = ActionChains(self.driver)
         for i in range(range_start,range_end):
+            print(i, end=' ')
             actions = actions.send_keys(i)
             actions = actions.send_keys(Keys.TAB)            
         actions.perform()
-
+        print()

@@ -91,7 +91,6 @@ print("Log: Waiting for page to load")
 
 #Fill each bowl with half of the gold bars and weigh them
 #If the result is equal then the fake bar is the odd one out
-print('Log: Filling Grids')
 page.fill_grid('left',0,goldbars_mid_index)
 page.fill_grid('right',goldbars_mid_index,goldbars_len-1)
 page.click_weigh_button()
@@ -101,37 +100,43 @@ if(page.get_result() == '='):
     print(f'Log: The fake should be {goldbars_len-1}')
     driver.quit()
 
-page.click_reset_button()
-weighings = page.get_weighings()
+else:
 
-# weighings = list of weighing results
-# weighings[last_item] = latest weighing result
-# split_weighings[weighings[last_item]] = List of numbers that should have the fake bar
-
-#Repeat filling the grid until weighings[last_item] returns a comparison that only has 1 goldbar a side
-#While the last item in split_weigh(weighings) is not equal to 1
-while True:
-    #Get refreshed weighings and last weighing should contain numbers from the lighter scale
-    weighings = page.get_weighings()
-    #Array[-1] returns last index of Array
-    last_weighing = split_weigh(weighings[-1])
-
-    #If we weighed only one result with another, then the value in the lighter scale should be the fake
-    #This works b/c split_weigh method returns the a list of numbers from the lighter scale
-    if(len(last_weighing) == 1):
-        print(f'Log: The fake should be {last_weighing[0]}')
-        page.click_goldbar(last_weighing[0])
-        break
-    
-    #last_weighing is the new reference for what numbers to fill the scales
-    goldbars_len = len(last_weighing)
-    goldbars_mid_index = math.floor(goldbars_len/2)
-
-    print('Log: Filling Grids')
-    page.fill_grid('left',last_weighing[0], last_weighing[goldbars_mid_index])
-    page.fill_grid('right',last_weighing[goldbars_mid_index], int(last_weighing[goldbars_len-1])+1)
-    page.click_weigh_button()
     page.click_reset_button()
+    weighings = page.get_weighings()
+
+    # weighings = list of weighing results
+    # weighings[last_item] = latest weighing result
+    # split_weighings[weighings[last_item]] = List of numbers that should have the fake bar. This is set to last_weighing
+
+    #Repeat filling the grid until weighings[last_item] returns a comparison that only has 1 goldbar a side
+    #While the last item in split_weigh(weighings) is not equal to 1
+    while True:
+        #Get refreshed weighings and last weighing should contain numbers from the lighter scale
+        weighings = page.get_weighings()
+        #Array[-1] returns last index of Array
+        last_weighing = split_weigh(weighings[-1])
+
+        #If we weighed only one result with another, then the value in the lighter scale should be the fake
+        #This works b/c split_weigh method returns the a list of numbers from the lighter scale
+        if(len(last_weighing) == 1):
+            print(f'Log: The fake should be {last_weighing[0]}')
+            page.click_goldbar(last_weighing[0])
+            break
+        
+        #last_weighing is the new reference for what numbers to fill the scales
+        goldbars_len = len(last_weighing)
+        goldbars_mid_index = math.floor(goldbars_len/2)
+
+        #print('Log: Filling Grids')
+        page.fill_grid('left',last_weighing[0], last_weighing[goldbars_mid_index])
+        page.fill_grid('right',last_weighing[goldbars_mid_index], int(last_weighing[goldbars_len-1])+1)
+        page.click_weigh_button()
+        page.click_reset_button()
+
+print("These are the weighings:")
+for item in weighings:
+    print(item)
 
     
     
