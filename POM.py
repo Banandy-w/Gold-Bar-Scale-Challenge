@@ -61,7 +61,7 @@ class BalancePage(BasePage):
         element = self.driver.find_element(By.ID, gold_id).click()
         
         alert = self.wait.until(EC.alert_is_present())
-        print("Log: Clicking on goldbar! The alert says: " + alert.text)
+        print(f"Log: Clicking on goldbar {number}! The alert says: '{alert.text}'")
         alert.accept()
     
     def get_result(self):
