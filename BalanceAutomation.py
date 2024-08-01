@@ -23,13 +23,7 @@
 
 
 import math, sys
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys 
+from selenium import webdriver 
 from POM import BalancePage,Locators
 
 #Pseudo Code
@@ -89,76 +83,80 @@ def match_driver():
             raise ValueError(f"Unsupported browser: {browser}. Please use the following: Firefox, Edge, Chrome, or Safari. Case insensitive")
     return driver
 
-if len(sys.argv) < 2:
-    sys.exit("Too few args")
-elif len(sys.argv) > 2:
-    sys.exit("Too many args")
-else:
+def main():
+    if len(sys.argv) < 2:
+        sys.exit("Too few args")
+    elif len(sys.argv) > 2:
+        sys.exit("Too many args")
+    else:
+            
+        #Open website
+        driver = match_driver()
+        URL = 'http://sdetchallenge.fetch.com/'
+        print("Log: Openning Page " + URL)
         
-    #Open website
-    driver = match_driver()
-    URL = 'http://sdetchallenge.fetch.com/'
-    print("Log: Openning Page " + URL)
-    
-    page = BalancePage(driver)
-    page.open_page(URL)
-    print("Log: Page Openned")
+        page = BalancePage(driver)
+        page.open_page(URL)
+        print("Log: Page Openned")
 
-    #Find the Max index of bars
-    page.wait_for(Locators.GOLD_BUTTON_ARRAY)
-    goldbars_len = int(page.get_array_length())
-    goldbars_mid_index = math.floor(goldbars_len/2)
-    print("Log: Waiting for page to load")
+        #Find the Max index of bars
+        page.wait_for(Locators.GOLD_BUTTON_ARRAY)
+        goldbars_len = int(page.get_array_length())
+        goldbars_mid_index = math.floor(goldbars_len/2)
+        print("Log: Waiting for page to load")
 
-    #Fill each bowl with half of the gold bars and weigh them
-    #If the result is equal then the fake bar is the odd one out
-    page.fill_grid('left',0,goldbars_mid_index)
-    page.fill_grid('right',goldbars_mid_index,goldbars_len-1)
-    page.click_weigh_button()
+        #Fill each bowl with half of the gold bars and weigh them
+        #If the result is equal then the fake bar is the odd one out
+        page.fill_grid('left',0,goldbars_mid_index)
+        page.fill_grid('right',goldbars_mid_index,goldbars_len-1)
+        page.click_weigh_button()
 
-    if(page.get_result() == '='):
-        page.click_goldbar(goldbars_len-1)
-        print(f'Log: The fake should be {goldbars_len-1}')
+        if(page.get_result() == '='):
+            page.click_goldbar(goldbars_len-1)
+            print(f'Log: The fake should be {goldbars_len-1}')
+            driver.quit()
+
+        else:
+
+            page.click_reset_button()
+            weighings = page.get_weighings()
+
+            # weighings = list of weighing results
+            # weighings[last_item] = latest weighing result
+            # split_weighings[weighings[last_item]] = List of numbers that should have the fake bar. This is set to last_weighing
+
+            #Repeat filling the grid until weighings[last_item] returns a comparison that only has 1 goldbar a side
+            #While the last item in split_weigh(weighings) is not equal to 1
+            while True:
+                #Get refreshed weighings and last weighing should contain numbers from the lighter scale
+                weighings = page.get_weighings()
+                #Array[-1] returns last index of Array
+                last_weighing = split_weigh(weighings[-1])
+
+                #If we weighed only one result with another, then the value in the lighter scale should be the fake
+                #This works b/c split_weigh method returns the a list of numbers from the lighter scale
+                if(len(last_weighing) == 1):
+                    print(f'Log: The fake should be {last_weighing[0]}')
+                    page.click_goldbar(last_weighing[0])
+                    break
+                
+                #last_weighing is the new reference for what numbers to fill the scales
+                goldbars_len = len(last_weighing)
+                goldbars_mid_index = math.floor(goldbars_len/2)
+
+                #print('Log: Filling Grids')
+                page.fill_grid('left',last_weighing[0], last_weighing[goldbars_mid_index])
+                page.fill_grid('right',last_weighing[goldbars_mid_index], int(last_weighing[goldbars_len-1])+1)
+                page.click_weigh_button()
+                page.click_reset_button()
+
+        print("These are the weighings:")
+        for item in weighings:
+            print(item)
         driver.quit()
 
-    else:
-
-        page.click_reset_button()
-        weighings = page.get_weighings()
-
-        # weighings = list of weighing results
-        # weighings[last_item] = latest weighing result
-        # split_weighings[weighings[last_item]] = List of numbers that should have the fake bar. This is set to last_weighing
-
-        #Repeat filling the grid until weighings[last_item] returns a comparison that only has 1 goldbar a side
-        #While the last item in split_weigh(weighings) is not equal to 1
-        while True:
-            #Get refreshed weighings and last weighing should contain numbers from the lighter scale
-            weighings = page.get_weighings()
-            #Array[-1] returns last index of Array
-            last_weighing = split_weigh(weighings[-1])
-
-            #If we weighed only one result with another, then the value in the lighter scale should be the fake
-            #This works b/c split_weigh method returns the a list of numbers from the lighter scale
-            if(len(last_weighing) == 1):
-                print(f'Log: The fake should be {last_weighing[0]}')
-                page.click_goldbar(last_weighing[0])
-                break
-            
-            #last_weighing is the new reference for what numbers to fill the scales
-            goldbars_len = len(last_weighing)
-            goldbars_mid_index = math.floor(goldbars_len/2)
-
-            #print('Log: Filling Grids')
-            page.fill_grid('left',last_weighing[0], last_weighing[goldbars_mid_index])
-            page.fill_grid('right',last_weighing[goldbars_mid_index], int(last_weighing[goldbars_len-1])+1)
-            page.click_weigh_button()
-            page.click_reset_button()
-
-    print("These are the weighings:")
-    for item in weighings:
-        print(item)
-    driver.quit()
+if __name__ == "__main__":
+    main()
         
         
         

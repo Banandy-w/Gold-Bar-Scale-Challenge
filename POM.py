@@ -2,8 +2,11 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys 
-import time, math
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+
+import time
 
 
 class Locators():
@@ -32,6 +35,7 @@ class BasePage():
     def wait_for(self,by_locator):
         self.wait.until(EC.presence_of_element_located(by_locator))
 
+#Note: Need to wrap try/except blocks around methods
 class BalancePage(BasePage):
     def __init__(self,driver):
         super().__init__(driver)
@@ -57,7 +61,7 @@ class BalancePage(BasePage):
         element = self.driver.find_element(By.ID, gold_id).click()
         
         alert = self.wait.until(EC.alert_is_present())
-        print("Log: The alert says: " + alert.text)
+        print("Log: Clicking on goldbar! The alert says: " + alert.text)
         alert.accept()
     
     def get_result(self):
