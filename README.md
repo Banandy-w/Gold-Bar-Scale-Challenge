@@ -20,7 +20,7 @@ NOTE: Do not refresh the page as it will reset the fake bar to a random
 NOTE: Buttons at the bottom with numbers DO NOT represent weights. It’s just the sequential number.
 
 ## Requirements / Prereqs
-* [Mozilla browser](https://www.mozilla.org/en-US/firefox/new/) or [Microsft Edge](https://www.microsoft.com/en-us/edge/download?form=MA13FJ) or [Google Chrome](https://www.google.com/chrome/)
+* [Mozilla browser](https://www.mozilla.org/en-US/firefox/new/) or [Microsft Edge](https://www.microsoft.com/en-us/edge/download?form=MA13FJ) or [Google Chrome](https://www.google.com/chrome/) installed
 * [Python 3.12.3](https://www.python.org/downloads/)
 # Packages used
 * [Selenium 4.20.0](https://pypi.org/project/selenium/#files)
@@ -39,5 +39,6 @@ cd path\to\this\forked\project
 ```
 5. Run the program with the command below. Replace browser with "edge", "firefox", "chrome", or "safari" to test with the respective browser. This is not case sensitive and not tested on safari.
 ```
-python .\BalanceAutomation.py firefox
+python .\BalanceAutomation.py browser
+#EG python .\BalanceAutomation.py firefox
 ```
