@@ -78,7 +78,8 @@ def match_driver():
         case 'chrome':
             driver = webdriver.Chrome()
         case 'safari':
-            print("Safari is unavailable for windows!")
+            driver = webdriver.Safari()
+            print("NOTE: Safari is unavailable for windows!")
         case _:
             raise ValueError(f"Unsupported browser: {browser}. Please use the following: Firefox, Edge, Chrome, or Safari. Case insensitive")
     return driver
@@ -99,8 +100,8 @@ def main():
         page.open_page(URL)
         print("Log: Page Openned")
 
+
         #Find the Max index of bars
-        page.wait_for(Locators.GOLD_BUTTON_ARRAY)
         goldbars_len = int(page.get_array_length())
         goldbars_mid_index = math.floor(goldbars_len/2)
         print("Log: Waiting for page to load")
