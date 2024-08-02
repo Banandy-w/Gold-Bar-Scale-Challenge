@@ -42,3 +42,8 @@ cd path\to\this\forked\project
 python .\BalanceAutomation.py browser
 #EG python .\BalanceAutomation.py firefox
 ```
+# Hindsights
+* Better solution: divide the bars in groups of 3
+* Build functions in conjunction with assertions/unit tests to double check
+* Have unit tests for methods in POM page
+* Pytest could've been utilized to run multiple browsers in parallel
