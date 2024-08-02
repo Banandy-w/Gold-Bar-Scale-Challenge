@@ -90,7 +90,7 @@ def main():
     elif len(sys.argv) > 2:
         sys.exit("Too many args")
     else:
-            
+        print("!!!WARNING!!! Allow code to run. Do not interact with browser.")
         #Open website
         driver = match_driver()
         URL = 'http://sdetchallenge.fetch.com/'

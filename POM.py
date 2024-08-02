@@ -34,9 +34,9 @@ class BasePage():
     def open_page(self, URL):
         try:
             self.driver.get(URL)
-        except Exception as url_error:
+        except Exception:
             print(f'Error occurred while opening {URL}')
-            raise url_error
+
 
     """Waits for page to load a certain element"""
     def wait_for(self,by_locator):
@@ -45,6 +45,10 @@ class BasePage():
         except TimeoutException:
             print(f'Element {by_locator} was not found in time')
 
+#Making the code more production ready would be to have unit tests for the functions/methods already
+#And asserts to make sure functions are working correctly
+
+#Using pytest to allow for parallel tests to be ran is also an improvement.
 class BalancePage(BasePage):
     def __init__(self,driver):
         super().__init__(driver)
@@ -84,6 +88,8 @@ class BalancePage(BasePage):
             
             alert = self.wait.until(EC.alert_is_present())
             print(f"Log: Clicking on goldbar {number}! The alert says: '{alert.text}'")
+            #A pause is here so the alert can be visibly verified
+            time.sleep(3)
             alert.accept()
         except TimeoutException:
             print(f'Goldbar with id {gold_id} was not found in time')
