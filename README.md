@@ -32,7 +32,7 @@ NOTE: Buttons at the bottom with numbers DO NOT represent weights. It’s just t
 ```
 pip install selenium
 ```
-3. Fork this project
+3. [Fork this project](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 4. On your terminal
 ```
 cd path\to\this\forked\project
